@@ -1,3 +1,5 @@
+from Specification import *
+
 def heuristic(node, goal):
     # Euclidean distance heuristic
     return ((node[0] - goal[0]) ** 2 + (node[1] - goal[1]) ** 2) ** 0.5
@@ -247,7 +249,7 @@ def handleMainLv4(maze, start):
     pacmanRes += pacmanPath[1:]
     ghostsRes += ghostsPath[1:]
 
-    print("PACMAN", pacmanRes)
-    print("GHOSTS", ghostsRes)
+    #file_result.write("PACMAN", pacmanRes)
+    #file_result.write("GHOSTS", ghostsRes)
 
     return pacmanRes, ghostsRes, status

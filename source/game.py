@@ -1,4 +1,5 @@
 import pygame
+from Specification import *
 from utils import (
     Direction,
     ScoreType,
@@ -272,8 +273,9 @@ class GameRenderer:
             self._screen.fill(black)
             self._handle_events()
 
-        print("Game over")
-        print("SCORE:", self._score)
+        #file_result.write("Game over")
+        #file_result.write("SCORE:")
+        #file_result.write(str(self._score))
 
     def add_game_object(self, obj: GameObject):
         self._game_objects.append(obj)

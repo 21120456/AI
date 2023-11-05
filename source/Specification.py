@@ -6,6 +6,8 @@ APP_WIDTH, APP_HEIGHT = 610, 670
 APP_CAPTION = r"Pacman"
 FPS = 60
 
+# File result
+file_result = open(f"../output/result.txt", "w")
 
 # Map
 

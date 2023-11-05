@@ -1,4 +1,5 @@
 import random
+from Specification import *
 
 def heuristic(node, goal):
     # Euclidean distance heuristic
@@ -165,9 +166,9 @@ def changeGoal(maze, pacmanPos, foods, ghosts, invisibility, mazePacman):
     foods = sorted(foods, key=lambda food: heuristic(pacmanPos, food))
     invisibility1 = [coord for coord in invisibility if mazePacman[coord[0]][coord[1]] == 4]
     invisibility1 = sorted(invisibility1, key=lambda inv: heuristic(pacmanPos, inv))
-    print("pacmanPos", pacmanPos)
-    print("invisibility1")
-    print(invisibility1)
+    #file_result.write("pacmanPos", pacmanPos)
+    #file_result.write("invisibility1")
+    #file_result.write(invisibility1)
     if foods:
         res = foods[0]
     elif invisibility1:
@@ -214,7 +215,7 @@ def handleAStar(maze, start, goal, foods, ghosts, countFood, invisibility, mazeP
     ghostsPath = [ghosts]
     while True:
         foods = find_object(mazePacman, 2)
-        print("pacmanPos: ", pacmanPos)
+        #file_result.write("pacmanPos: ", pacmanPos)
         #print("mazePacman: ", mazePacman)
         # print(countFood)
         if (countFood == 0):
@@ -266,7 +267,7 @@ def handleAStar(maze, start, goal, foods, ghosts, countFood, invisibility, mazeP
 
 def handleMainLv3(maze, start):
     mazeFood = initfoodmaze(maze)
-    print("mazeFood", mazeFood)
+    #file_result.write("mazeFood", mazeFood)
     mazePacman = initMazePacmanView(maze)
     pacmanPos = tuple(start)
     pacmanRes = [start]
@@ -298,7 +299,7 @@ def handleMainLv3(maze, start):
     pacmanRes += pacmanPath[1:]
     ghostsRes += ghostsPath[1:]
     
-    print("PACMAN", pacmanRes)
-    print("GHOSTS", ghostsRes)
+    #file_result.write("PACMAN", pacmanRes)
+    #file_result.write("GHOSTS", ghostsRes)
     
     return pacmanRes, ghostsRes, status

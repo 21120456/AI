@@ -16,6 +16,7 @@ def game_initialize():
 if __name__ == "__main__":
     unified_size = 32
     run = True
+    file_result = open(f"../output/result.txt", "w")
     while run:
         pacman_game = MyApp()
         pacman_game.run()
@@ -92,7 +93,9 @@ if __name__ == "__main__":
             game_renderer.tick(speed)
             execution_time = time.time() - start
 
-            print("Path calculation time:", path_calculation_time)
-            print("Execution time:", execution_time)
+            file_result.write("Path calculation time:")
+            file_result.write(str(path_calculation_time)+"\n")
+            file_result.write("Execution time:")
+            file_result.write(str(execution_time)+"\n")
         else:
-            print("Cant find any path to get to the food")
+            file_result.write("Cant find any path to get to the food")
