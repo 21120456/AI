@@ -1,5 +1,3 @@
-from Specification import *
-
 def heuristic(node, goal):
     # Euclidean distance heuristic
     return ((node[0] - goal[0]) ** 2 + (node[1] - goal[1]) ** 2) ** 0.5
@@ -73,10 +71,13 @@ def CalcHeuristic(start, array):
     return res
 
 
-def astar(maze, start, goal):
-    queue = [(0, start, 0)]  # Using a queue: (total_cost, current_node, score)
+def astar(maze, start, goal, isGhost=False):
+    queue = [(heuristic(start, goal), start, 0)] # Using a queue: (total_cost, current_node, score)
+    queueDistance = dict()
     visited = set()
     came_from = {}
+
+    get_neighbors_method = get_ghost_neighbors if isGhost else get_neighbors
 
     while queue:
         distance, current_node, score = queue.pop(0)
@@ -84,39 +85,21 @@ def astar(maze, start, goal):
         if current_node == goal:
             return reconstruct_path(came_from, current_node)
 
-        if current_node not in visited:
-            visited.add(current_node)
-            for neighbor in get_neighbors(current_node, maze):
-                if neighbor not in visited:
-                    total_cost = distance + 1 + heuristic(neighbor, goal)
-                    came_from[neighbor] = current_node
-                    queue.append((total_cost, neighbor, score - 1))
-        queue.sort(key=lambda x: x[0], reverse=False)
+        visited.add(current_node)
+
+        for neighbor in get_neighbors_method(current_node, maze):
+            total_cost = (distance - heuristic(current_node, goal) +  1) + heuristic(neighbor, goal)
+            if ((neighbor not in queueDistance) or (neighbor in queueDistance  and total_cost < queueDistance[neighbor])) and neighbor not in visited:
+                queueDistance[neighbor] = total_cost
+                came_from[neighbor] = current_node
+                queue.append((total_cost, neighbor, score - 1))
+
+        queue.sort(
+            key=lambda x: x[0], reverse=False
+        ) 
 
     return reconstruct_path(came_from, current_node)
 
-
-def ghostAstar(maze, start, goal):
-    queue = [(0, start, 0)]  # Using a queue: (total_cost, current_node, score)
-    visited = set()
-    came_from = {}
-
-    while queue:
-        distance, current_node, score = queue.pop(0)
-
-        if current_node == goal:
-            return reconstruct_path(came_from, current_node)
-
-        if current_node not in visited:
-            visited.add(current_node)
-            for neighbor in get_ghost_neighbors(current_node, maze):
-                if neighbor not in visited:
-                    total_cost = distance + 1 + heuristic(neighbor, goal)
-                    came_from[neighbor] = current_node
-                    queue.append((total_cost, neighbor, score - 1))
-        queue.sort(key=lambda x: x[0], reverse=False)
-
-    return reconstruct_path(came_from, current_node)
 
 
 def changePath(maze, pacmanPos, ghosts):
@@ -131,7 +114,7 @@ def changePath(maze, pacmanPos, ghosts):
 def ghostMove(maze, pacmanPos, ghosts):
     ghostsPos = []
     for ghost in ghosts:
-        ghostPath = ghostAstar(maze, ghost, pacmanPos)
+        ghostPath = astar(maze, ghost, pacmanPos, True)
         if len(ghostPath) > 1:
             maze[ghostPath[0][0]][ghostPath[0][1]] = 0
             maze[ghostPath[1][0]][ghostPath[1][1]] = 3
@@ -181,7 +164,7 @@ def is_blocked(maze, pacmanPos):
 
     for i in range(len(maze)):
         for j in range(len(maze[0])):
-            if maze[i][j] == 0 and (i, j) not in visited:
+            if (maze[i][j] == 0 or maze[i][j] == 2) and (i, j) not in visited:
                 return True
 
     return False
@@ -200,6 +183,7 @@ def handleAStar(maze, start, goal, foods, ghosts):
             if len(foods) == 0:
                 break
             if (is_blocked(maze, pacmanPos) == True):
+                print("Lose blocked")
                 return maze, pathSolution, foods, ghosts, ghostsPath, "blocked"
                 # break
 
@@ -216,27 +200,27 @@ def handleAStar(maze, start, goal, foods, ghosts):
             pacmanPos = pacmanPath.pop(0)
             maze, foods = eatFood(maze, pacmanPos, foods)
             newPacmanPos = pacmanPath[0]
-            moveablePos = get_neighbors(pacmanPos, maze)
-            if (newPacmanPos in moveablePos) and (
-                check_safe_move(newPacmanPos, ghosts)
-            ):
-                maze, ghosts = ghostMove(maze, pacmanPos, ghosts)
-                ghostsPath.append(ghosts)
+
+            isSafe = check_safe_move(newPacmanPos, ghosts)
+            maze, ghosts = ghostMove(maze, pacmanPos, ghosts)
+            ghostsPath.append(ghosts)
+            if (isSafe):
                 pacmanPos = newPacmanPos
                 pathSolution.append(pacmanPos)
             else:
-                maze, ghosts = ghostMove(maze, pacmanPos, ghosts)
-                ghostsPath.append(ghosts)
                 pacmanPos = changePath(maze, pacmanPos, ghosts)
                 maze, foods = eatFood(maze, pacmanPos, foods)
                 pathSolution.append(pacmanPos)
                 if pacmanPos in ghosts:
+                    print("Lose dead")
                     return maze, pathSolution, foods, ghosts, ghostsPath, "dead"
 
     return maze, pathSolution, foods, ghosts, ghostsPath, "alive"
 
 
 def handleMainLv4(maze, start):
+    start = [start[1],start[0]]
+    
     ghosts = find_object(maze, 3)
     foods = find_object(maze, 2)
     pacmanPos = tuple(start)
@@ -249,7 +233,7 @@ def handleMainLv4(maze, start):
     pacmanRes += pacmanPath[1:]
     ghostsRes += ghostsPath[1:]
 
-    #file_result.write("PACMAN", pacmanRes)
-    #file_result.write("GHOSTS", ghostsRes)
+    # print("PACMAN", pacmanRes)
+    # print("GHOSTS", ghostsRes)
 
     return pacmanRes, ghostsRes, status

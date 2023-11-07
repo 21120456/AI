@@ -37,7 +37,7 @@ if __name__ == "__main__":
             path_calculation_time = time.time() - start
         elif level == 3:
             start = time.time()
-            pacman_path, ghosts_path, status = pacman_game.search.get_path_lv4()
+            pacman_path, ghosts_path, status = pacman_game.search.get_path_lv3()
             pacman_game.set_status(status)
             path_calculation_time = time.time() - start
         elif level == 4:
@@ -92,10 +92,13 @@ if __name__ == "__main__":
             start = time.time()
             game_renderer.tick(speed)
             execution_time = time.time() - start
-
+            file_result.write("Level: ")
+            file_result.write(str(level) + "\n")
+            file_result.write("Map: ")
+            file_result.write(str(map) + "\n")
             file_result.write("Path calculation time:")
-            file_result.write(str(path_calculation_time)+"\n")
+            file_result.write(str(path_calculation_time) + "\n")
             file_result.write("Execution time:")
-            file_result.write(str(execution_time)+"\n")
+            file_result.write(str(execution_time) + "\n")
         else:
             file_result.write("Cant find any path to get to the food")

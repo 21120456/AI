@@ -9,34 +9,10 @@ FPS = 60
 # File result
 file_result = open(f"../output/result.txt", "w")
 
-# Map
-
-MAP_IMG = [pygame.image.load(r"../Assets/maps/0.jpg"),
-           pygame.image.load(r"../Assets/maps/1.jpg"),
-           pygame.image.load(r"../Assets/maps/2.jpg"),
-           pygame.image.load(r"../Assets/maps/3.jpg"),
-           pygame.image.load(r"../Assets/maps/4.jpg"),
-           pygame.image.load(r"../Assets/maps/5.jpg"),
-           pygame.image.load(r"../Assets/maps/6.jpg"),
-           pygame.image.load(r"../Assets/maps/7.jpg"),
-           pygame.image.load(r"../Assets/maps/8.jpg"),
-           pygame.image.load(r"../Assets/maps/9.jpg"),
-           pygame.image.load(r"../Assets/maps/10.jpg"),
-           pygame.image.load(r"../Assets/maps/11.jpg"),
-           pygame.image.load(r"../Assets/maps/12.jpg"),
-           pygame.image.load(r"../Assets/maps/13.jpg"),
-           pygame.image.load(r"../Assets/maps/14.jpg"),
-           pygame.image.load(r"../Assets/maps/15.jpg"),
-           pygame.image.load(r"../Assets/maps/16.jpg")]
-
-MAP_NUM = len(MAP_IMG)
-
 
 # Background
 HOME_BACKGROUND = r"../Assets/bg/home_bg.png"
 ABOUT_BACKGROUND = r"../Assets/bg/about_bg.png"
-GAMEOVER_BACKGROUND = r"../Assets/bg/gameover_bg.png"
-VICTORY_BACKGROUND = r"../Assets/bg/victory_bg.jpg"
 
 
 # Screen state
@@ -88,5 +64,3 @@ RED = (255, 0, 0)
 TOMATO = (255, 99, 71)
 GREEN = (0, 255, 0)
 YELLOW = (255, 255, 0)
-
-BLACK_BG = r"./Assets/effects/bg.png"
